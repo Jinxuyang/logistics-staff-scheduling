@@ -50,6 +50,8 @@ public class ShiroConfig {
         shiroFilter.setFilters(filters);
 
         Map<String, String> filterMap = new LinkedHashMap<>();
+        // 测试用
+        //filterMap.put("/**","anon");
         filterMap.put("/webjars/**", "anon");
         filterMap.put("/druid/**", "anon");
         filterMap.put("/app/**", "anon");
@@ -61,6 +63,7 @@ public class ShiroConfig {
         filterMap.put("/captcha.jpg", "anon");
         filterMap.put("/aaa.txt", "anon");
         filterMap.put("/**", "oauth2");
+
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 
         return shiroFilter;

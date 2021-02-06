@@ -22,11 +22,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,6 +98,26 @@ public class SysLoginController extends AbstractController {
 	public R logout() {
 		sysUserTokenService.logout(getUserId());
 		return R.ok();
+	}
+
+	@GetMapping("/sys/addUsers")
+	public void add(){
+		SysUserController sysUserController = new SysUserController();
+		SysUserEntity sysUserEntity = new SysUserEntity();
+		sysUserEntity.setEmail("test@163.com");
+		sysUserEntity.setMobile("16312346789");
+		sysUserEntity.setPassword("staff");
+		sysUserEntity.setSalt("");
+		sysUserEntity.setStatus(1);
+		sysUserEntity.setCreateUserId(1L);
+		List<Long> list = new ArrayList<>();
+		list.add(1L);
+		sysUserEntity.setRoleIdList(list);
+		for (int i = 3; i <= 3 ; i++) {
+			sysUserEntity.setUsername("staff"+i);
+			System.out.println(sysUserEntity);
+			sysUserController.save(sysUserEntity);
+		}
 	}
 	
 }
