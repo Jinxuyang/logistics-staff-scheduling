@@ -1,6 +1,10 @@
 package io.renren.modules.generator.service.impl;
 
+import org.junit.After;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,6 +19,8 @@ import io.renren.modules.generator.service.SchedulingService;
 
 @Service("schedulingService")
 public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, SchedulingEntity> implements SchedulingService {
+    @Autowired
+    private SchedulingDao schedulingDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -29,4 +35,10 @@ public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, Scheduling
         return new PageUtils(page);
     }
 
+    @Override
+    public List<SchedulingEntity> getListByUserID(int id) {
+        QueryWrapper<SchedulingEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",id);
+        return schedulingDao.selectList(queryWrapper);
+    }
 }
