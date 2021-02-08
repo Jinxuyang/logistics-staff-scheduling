@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import io.renren.modules.generator.entity.viewentity.UserVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,12 @@ public class SchedulingController {
     @GetMapping("/listByUserID/{id}")
     public R listByUserID(@PathVariable int id){
         List<SchedulingEntity> list = schedulingService.getListByUserID(id);
+        return R.ok().put("data",list);
+    }
+
+    @GetMapping("/listSameStatusUsers")
+    public R listSameStatusUsers(@RequestParam int day,@RequestParam int userId){
+        List<UserVo> list = schedulingService.getSameStatusUsers(userId,day);
         return R.ok().put("data",list);
     }
 
