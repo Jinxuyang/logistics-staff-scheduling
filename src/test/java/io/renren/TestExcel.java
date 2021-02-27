@@ -30,7 +30,7 @@ public class TestExcel {
     @Test
     public void test(){
 
-        ExcelReader reader = ExcelUtil.getReader("D:\\Workspace\\Java\\logistics\\src\\main\\resources\\排班-最终结果.xlsx");
+        ExcelReader reader = ExcelUtil.getReader("D:\\Workspace\\2020\\renren-fast\\src\\main\\resources\\排班-最终结果-2月21日.xlsx");
         List<List<Object>> data = reader.read();
         for (int i = 1;i <= 200;i++){
             System.out.println("员工"+i+":");
