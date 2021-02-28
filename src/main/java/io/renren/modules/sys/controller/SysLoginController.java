@@ -100,7 +100,7 @@ public class SysLoginController extends AbstractController {
 		return R.ok();
 	}
 
-	@GetMapping("/sys/addUsers")
+	/*@GetMapping("/sys/addUsers")
 	public void add(){
 		SysUserController sysUserController = new SysUserController();
 		SysUserEntity sysUserEntity = new SysUserEntity();
@@ -118,6 +118,6 @@ public class SysLoginController extends AbstractController {
 			System.out.println(sysUserEntity);
 			sysUserController.save(sysUserEntity);
 		}
-	}
+	}*/
 	
 }

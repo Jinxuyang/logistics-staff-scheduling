@@ -35,7 +35,7 @@ public class AddUser {
 
         SysUserController sysUserController = new SysUserController();
         SysUserEntity sysUserEntity = new SysUserEntity();
-        sysUserEntity.setEmail("test@163.com");
+        //sysUserEntity.setEmail("test@163.com");
         sysUserEntity.setMobile("16312346789");
         sysUserEntity.setPassword("staff");
         sysUserEntity.setSalt("");

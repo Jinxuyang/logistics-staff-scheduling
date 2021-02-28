@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import io.renren.modules.generator.controller.viewobject.WeekScheduleViewObject;
 import io.renren.modules.generator.entity.viewentity.UserVo;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,19 @@ public class SchedulingController {
 
         return R.ok().put("page", page);
     }
+    /**
+     * 获取周排班信息
+     */
+    @RequestMapping("/week-list")
+    @RequiresPermissions("generator:scheduling:list")
+    public R weekList(String key,String category,int week){
+            List<WeekScheduleViewObject> weekScheduleViewObjectList = schedulingService.getWeekSchedule(key, category, 1+(7*(week-1)), week*7);
+        return R.ok().put("data", weekScheduleViewObjectList);
+    }
 
-    @GetMapping("/listByUserID/{id}")
-    public R listByUserID(@PathVariable int id){
-        List<SchedulingEntity> list = schedulingService.getListByUserID(id);
+    @GetMapping("/listByUsername")
+    public R listByUsername(@RequestParam String username){
+        List<SchedulingEntity> list = schedulingService.getListByUsername(username);
         return R.ok().put("data",list);
     }
 

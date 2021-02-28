@@ -1,12 +1,16 @@
 package io.renren.modules.generator.service.impl;
 
+import cn.hutool.core.date.Week;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
+import io.renren.modules.generator.controller.viewobject.WeekScheduleViewObject;
 import io.renren.modules.generator.dao.SchedulingDao;
+import io.renren.modules.generator.dao.WeekScheduleRemarkDao;
 import io.renren.modules.generator.entity.SchedulingEntity;
+import io.renren.modules.generator.entity.WeekScheduleRemarkEntity;
 import io.renren.modules.generator.entity.viewentity.UserVo;
 import io.renren.modules.generator.service.SchedulingService;
 import io.renren.modules.sys.dao.SysUserDao;
@@ -26,6 +30,8 @@ public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, Scheduling
     private SchedulingDao schedulingDao;
     @Autowired
     private SysUserDao sysUserDao;
+    @Autowired
+    private WeekScheduleRemarkDao weekScheduleRemarkDao;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -41,9 +47,9 @@ public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, Scheduling
     }
 
     @Override
-    public List<SchedulingEntity> getListByUserID(int id) {
+    public List<SchedulingEntity> getListByUsername(String username) {
         QueryWrapper<SchedulingEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",id);
+        queryWrapper.eq("username",username);
         return schedulingDao.selectList(queryWrapper);
     }
 
@@ -61,7 +67,7 @@ public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, Scheduling
         List<UserVo> userVoList = new ArrayList<>();
         QueryWrapper<SysUserEntity> sysUserEntityQueryWrapper = new QueryWrapper<>();
         for (SchedulingEntity entity : schedulingEntityList) {
-            sysUserEntityQueryWrapper.eq("username","staff"+entity.getUserId());
+            sysUserEntityQueryWrapper.eq("username",entity.getUsername());
             UserVo userVo = new UserVo();
             SysUserEntity sysUserEntity = sysUserDao.selectOne(sysUserEntityQueryWrapper);
             if (sysUserEntity!=null) {
@@ -71,5 +77,50 @@ public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, Scheduling
             sysUserEntityQueryWrapper.clear();
         }
         return userVoList;
+    }
+
+    @Override
+    public List<WeekScheduleViewObject> getWeekSchedule(String key, String category,int start,int end) {
+        QueryWrapper<SysUserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("category",category);
+        List<SysUserEntity> sysUserEntityList = sysUserDao.selectList(queryWrapper);
+        List<WeekScheduleViewObject> weekScheduleViewObjectList = new ArrayList<>();
+        for (SysUserEntity sysUserEntity : sysUserEntityList) {
+
+            QueryWrapper<SchedulingEntity> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("username",sysUserEntity.getUsername())
+            .between("date",start,end);
+            List<SchedulingEntity> schedulingEntityList = schedulingDao.selectList(queryWrapper1);
+
+            WeekScheduleViewObject weekScheduleViewObject = new WeekScheduleViewObject();
+            weekScheduleViewObject.setUsername(sysUserEntity.getUsername());
+            weekScheduleViewObject.setCategory(sysUserEntity.getCategory());
+
+
+            List<String> stringList = new ArrayList<>();
+            int day = 0,night = 0,rest = 0;
+            for (SchedulingEntity schedulingEntity : schedulingEntityList) {
+                String status = schedulingEntity.getStatus();
+                if (status.equals("白班")) day++;
+                else if (status.equals("夜班")) night++;
+                else rest++;
+                stringList.add(status);
+            }
+            weekScheduleViewObject.setDay(day);
+            weekScheduleViewObject.setNight(night);
+            weekScheduleViewObject.setRest(rest);
+            weekScheduleViewObject.setDate(stringList);
+
+            QueryWrapper<WeekScheduleRemarkEntity> queryWrapper2 = new QueryWrapper<>();
+            queryWrapper2.eq("username",sysUserEntity.getUsername())
+                    .eq("start",start)
+                    .eq("end",end);
+            WeekScheduleRemarkEntity weekScheduleRemarkEntity = weekScheduleRemarkDao.selectOne(queryWrapper2);
+            if (weekScheduleRemarkEntity != null)weekScheduleViewObject.setRemark(weekScheduleRemarkEntity.getRemark());
+
+            weekScheduleViewObjectList.add(weekScheduleViewObject);
+        }
+        return weekScheduleViewObjectList;
+
     }
 }

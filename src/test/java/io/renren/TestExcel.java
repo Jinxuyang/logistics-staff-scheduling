@@ -30,7 +30,7 @@ public class TestExcel {
     @Test
     public void test(){
 
-        ExcelReader reader = ExcelUtil.getReader("D:\\Workspace\\2020\\renren-fast\\src\\main\\resources\\排班-最终结果-2月21日.xlsx");
+        ExcelReader reader = ExcelUtil.getReader("D:\\Workspace\\2020\\renren-fast\\src\\main\\resources\\排班-最终结果-2月25日.xlsx");
         List<List<Object>> data = reader.read();
         for (int i = 1;i <= 200;i++){
             System.out.println("员工"+i+":");
@@ -44,7 +44,7 @@ public class TestExcel {
                     j+=1;
                     y = (Long) s.get(j);
                     SchedulingEntity schedulingEntity = new SchedulingEntity();
-                    schedulingEntity.setUserId(i);
+                    schedulingEntity.setUsername("staff"+i);
                     schedulingEntity.setDate(cnt);
                     cnt++;
                     if (x == 1 && y == 0) {
