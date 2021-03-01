@@ -22,7 +22,7 @@ public interface SchedulingService extends IService<SchedulingEntity> {
 
     List<SchedulingEntity> getListByUsername(String username);
 
-    List<UserVo> getSameStatusUsers(int userId, int day);
+    List<UserVo> getSameStatusUsers(String username, int day);
 
     List<WeekScheduleViewObject> getWeekSchedule(String key,String category,int start,int end);
 

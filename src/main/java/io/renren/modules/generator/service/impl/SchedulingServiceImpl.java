@@ -54,9 +54,9 @@ public class SchedulingServiceImpl extends ServiceImpl<SchedulingDao, Scheduling
     }
 
     @Override
-    public List<UserVo> getSameStatusUsers(int userId, int day) {
+    public List<UserVo> getSameStatusUsers(String username, int day) {
         QueryWrapper<SchedulingEntity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId)
+        queryWrapper.eq("username",username)
                 .eq("date",day);
         SchedulingEntity schedulingEntity = schedulingDao.selectOne(queryWrapper);
         queryWrapper.clear();

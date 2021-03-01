@@ -34,7 +34,6 @@ public class SchedulingController {
      * 列表
      */
     @RequestMapping("/list")
-    @RequiresPermissions("generator:scheduling:list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = schedulingService.queryPage(params);
 
@@ -44,7 +43,6 @@ public class SchedulingController {
      * 获取周排班信息
      */
     @RequestMapping("/week-list")
-    @RequiresPermissions("generator:scheduling:list")
     public R weekList(String key,String category,int week){
             List<WeekScheduleViewObject> weekScheduleViewObjectList = schedulingService.getWeekSchedule(key, category, 1+(7*(week-1)), week*7);
         return R.ok().put("data", weekScheduleViewObjectList);
@@ -57,8 +55,8 @@ public class SchedulingController {
     }
 
     @GetMapping("/listSameStatusUsers")
-    public R listSameStatusUsers(@RequestParam int day,@RequestParam int userId){
-        List<UserVo> list = schedulingService.getSameStatusUsers(userId,day);
+    public R listSameStatusUsers(@RequestParam int day,@RequestParam String username){
+        List<UserVo> list = schedulingService.getSameStatusUsers(username,day);
         return R.ok().put("data",list);
     }
 
